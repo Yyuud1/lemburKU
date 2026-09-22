@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f8f5ff">
+  <title>lemburKU</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2218%22%20fill%3D%22%237756b1%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2218%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2213%22%20fill%3D%22%23eee5fb%22%2F%3E%3Cpath%20d%3D%22M32%2021v12l8%205%22%20fill%3D%22none%22%20stroke%3D%22%237756b1%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/regular/rounded.css" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <style>
+    :root{
+      --ink:#322946;--soft-ink:#625a73;--muted:#8b829b;--violet:#7756b1;--violet-dark:#59378f;
+      --line:#eae4f3;--surface:#fff;--bg:#f8f5ff;--lilac:#eee5fb;--lav:#f4eefc;
+      --mint:#e8f5ee;--mint-ink:#36735b;--rose:#fff0ef;--rose-ink:#a26568;
+      --shadow:0 22px 70px rgba(62,42,102,.075);--radius:26px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Poppins,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 7% 8%,rgba(214,194,247,.37),transparent 30%),radial-gradient(circle at 92% 74%,rgba(226,211,246,.40),transparent 34%)}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .fi{display:inline-flex;align-items:center;justify-content:center;line-height:1}
+    .shell{max-width:1240px;margin:auto;padding:24px 34px 38px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:6px 0 26px;gap:16px}
+    .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);font-size:15px;font-weight:800;letter-spacing:-.045em}
+    .brand-mark{display:grid;place-items:center;width:40px;height:40px;border-radius:14px;color:#fff;background:linear-gradient(145deg,#9676ce,#69499e);box-shadow:0 9px 20px #8e6cc23b;font-size:19px}
+    .brand span:last-child small{display:block;color:var(--muted);font-weight:500;letter-spacing:0;font-size:10px;line-height:1.2;margin-top:2px}
+    .brand-accent{color:var(--violet)}
+    .hero{min-height:220px;position:relative;isolation:isolate;overflow:hidden;border-radius:32px;background:linear-gradient(116deg,#7654b1 0%,#9474c9 60%,#ae96d4 100%);color:white;box-shadow:0 25px 55px #7855a72e;padding:34px 48px;display:flex;align-items:center}
+    .hero::before{content:"";position:absolute;width:540px;height:540px;right:-85px;top:-260px;border:1px solid #ffffff48;border-radius:50%;box-shadow:0 0 0 62px #ffffff0b,0 0 0 127px #ffffff09,0 0 0 192px #ffffff08}
+    .hero::after{content:"";position:absolute;width:184px;height:184px;right:126px;bottom:-97px;border:1px solid #ffffff4f;border-radius:50%}
+    .hero-content{max-width:62%;position:relative;z-index:2}
+    .hero.no-figure .hero-content{max-width:670px}
+    .hero-figure{position:absolute;z-index:1;right:2%;bottom:0;height:122%;max-width:44%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 17px 23px rgba(49,25,87,.17));pointer-events:none;user-select:none}
+    .hero-figure[hidden]{display:none}
+    .eyebrow{font-size:10px;letter-spacing:.19em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:9px}
+    .eyebrow::before{content:"";width:20px;height:1px;background:currentColor;opacity:.7}
+    .hero h1{font-size:clamp(31px,4vw,53px);line-height:1.18;letter-spacing:-.065em;font-weight:700;margin:16px 0 12px}
+    .hero h1 em{font-style:normal;color:#ead9ff;font-weight:500}
+    .hero p{font-size:13px;line-height:1.85;max-width:550px;margin:0;color:#f7f0ffdf}
+    .section-intro{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:31px 2px 17px}
+    .section-intro h2{font-size:21px;letter-spacing:-.045em;margin:0}
+    .section-intro p{font-size:11px;line-height:1.7;color:var(--muted);max-width:310px;text-align:right;margin:0}
+    .layout{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(360px,.84fr);gap:22px;align-items:stretch}
+    .panel{background:#ffffffed;border:1px solid #ebe5f4;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .form-panel{padding:28px;min-height:100%}
+    .panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+    .panel-head h3{margin:0;font-size:16px;letter-spacing:-.035em}
+    .panel-head p{margin:4px 0 0;font-size:11px;color:var(--muted)}
+    .field-block{margin-top:24px}
+    .field-label{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .input{appearance:none;width:100%;height:51px;border:1px solid #e6dfee;border-radius:13px;background:#fcfaff;color:var(--ink);padding:0 15px;outline:0;font-size:12px;font-weight:600;color-scheme:light;transition:border-color .2s,box-shadow .2s}
+    .input:focus{border-color:#ae8fdc;box-shadow:0 0 0 4px #a88bd323}
+    select.input{appearance:auto}
+    .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .day-info{margin-top:10px;display:flex;align-items:center;gap:8px;min-height:20px;color:var(--soft-ink);font-size:10px}
+    .holiday-toggle{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fbf9fe;cursor:pointer;margin-top:18px}
+    .holiday-toggle strong{display:block;font-size:11px;font-weight:600}
+    .holiday-toggle small{display:block;font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5}
+    .switch{position:relative;width:38px;height:22px;background:#d9d2e4;border-radius:20px;flex:none;margin-left:auto;transition:background .2s}
+    .switch::after{content:"";position:absolute;width:16px;height:16px;background:white;left:3px;top:3px;border-radius:50%;box-shadow:0 1px 4px #4c366240;transition:transform .2s}
+    .holiday-toggle input{position:absolute;opacity:0;width:1px;height:1px}
+    .holiday-toggle input:checked~.switch{background:#8f6bc8}
+    .holiday-toggle input:checked~.switch::after{transform:translateX(16px)}
+    .holiday-toggle:focus-within{outline:3px solid #a88bd342;outline-offset:2px}
+    .helper{font-size:10px;color:var(--muted);line-height:1.7;margin:10px 0 0}
+    .divider{height:1px;background:var(--line);margin:24px 0}
+    .primary,.reset-link,.copy-btn,.example{transition:transform .2s,background .2s,box-shadow .2s,border-color .2s}
+    .primary:hover,.copy-btn:hover,.example:hover{transform:translateY(-2px)}
+    .primary{border:0;background:var(--violet);color:#fff;border-radius:13px;padding:14px 20px;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;font-size:12px;font-weight:700;box-shadow:0 12px 24px #7855b136;margin-top:15px}
+    .primary:hover{background:var(--violet-dark);box-shadow:0 17px 28px #7855b13c}
+    .primary:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}
+    .reset-link{border:0;background:transparent;color:var(--violet);font-size:11px;font-weight:600;padding:6px}
+    .reset-link:hover{text-decoration:underline}
+    .example-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px;align-items:center}
+    .example-title{font-size:10px;color:var(--muted);margin-right:4px}
+    .example{border:1px solid #e5dcf1;background:#faf7fe;border-radius:99px;padding:8px 11px;color:var(--violet-dark);font-size:10px;font-weight:600}
+    .result-panel{padding:26px;min-height:100%}
+    .result-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .result-head h3{font-size:16px;letter-spacing:-.035em;margin:0}
+    .wage-card{position:relative;overflow:hidden;border-radius:20px;padding:24px;color:#fff;background:linear-gradient(125deg,#69479e,#9070c3);min-height:184px}
+    .wage-card::after{content:"";position:absolute;right:-60px;top:-70px;height:210px;width:210px;border:1px solid #ffffff3c;border-radius:50%;box-shadow:0 0 0 34px #ffffff0b,0 0 0 68px #ffffff0b}
+    .wage-card>*{position:relative;z-index:1}
+    .wage-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#f0e9ffec;font-size:11px}
+    .amount{font-size:clamp(36px,4vw,48px);letter-spacing:-.065em;font-weight:700;line-height:1.3;margin:11px 0 8px}
+    .amount.unknown{font-size:30px;line-height:1.35;letter-spacing:-.045em}
+    .status{display:inline-flex;align-items:center;gap:7px;background:#ffffff32;border:1px solid #ffffff35;border-radius:100px;padding:6px 10px;font-size:10px;font-weight:600}
+    .status .fi{font-size:11px}
+    .result-date{font-size:10px;color:var(--muted);margin:14px 2px 17px;line-height:1.7}
+    .perk-list{display:grid;gap:10px}
+    .perk{display:flex;align-items:flex-start;gap:12px;padding:14px;border:1px solid var(--line);border-radius:15px;background:#fcfbff}
+    .perk-icon{width:37px;height:37px;flex:none;display:grid;place-items:center;background:var(--lilac);color:var(--violet);border-radius:11px;font-size:17px}
+    .perk-icon.mint{background:var(--mint);color:var(--mint-ink)}
+    .perk-main{flex:1;min-width:0}
+    .perk-main strong{font-size:11px;display:block}
+    .perk-main small{display:block;color:var(--muted);font-size:10px;line-height:1.55;margin-top:2px}
+    .perk-state{font-size:10px;font-weight:700;white-space:nowrap;color:var(--violet);padding-top:2px}
+    .perk-state.off{color:#aaa2b5}
+    .perk-state.check{color:#a26568}
+    .explain{background:#f8f3ff;border:1px solid #ede3fa;border-radius:16px;padding:16px;margin-top:14px}
+    .explain strong{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--violet-dark)}
+    .explain p{margin:7px 0 0;color:var(--soft-ink);font-size:10px;line-height:1.8}
+    .copy-btn{width:100%;border:1px solid #ddcff0;background:#fff;color:var(--violet-dark);border-radius:12px;padding:11px;font-size:11px;font-weight:700;margin-top:13px;display:flex;align-items:center;justify-content:center;gap:8px}
+    .copy-btn:hover{background:#f8f3ff}
+    .note-card{display:block;border:1px solid #e9e2f3;background:#fff;border-radius:22px;padding:21px 25px;margin-top:22px;box-shadow:var(--shadow)}
+    .note-card h3{margin:0 0 6px;font-size:13px;letter-spacing:-.025em}
+    .note-card p{margin:0;color:var(--soft-ink);font-size:10px;line-height:1.8}
+    .note-label{display:flex;gap:10px;align-items:center}
+    .note-mini{margin-top:5px}
+    footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:26px 2px 4px;font-size:10px;color:var(--muted)}
+    footer a{color:var(--violet);text-decoration:none}
+    .swal2-container{font-family:Poppins,Arial,sans-serif!important}
+    .swal2-popup.swal2-toast{border-radius:14px!important;box-shadow:0 12px 35px #45306626!important}
+    @media(max-width:950px){.layout{grid-template-columns:1fr}.form-panel,.result-panel{min-height:0}.hero{min-height:250px}.hero-content{max-width:60%}.hero.no-figure .hero-content{max-width:610px}.hero-figure{height:115%;max-width:44%;right:2%}}
+    @media(max-width:620px){.shell{padding:14px 15px 26px}.topbar{padding:4px 2px 18px}.hero{min-height:355px;padding:28px 26px 160px;border-radius:25px;align-items:flex-start}.hero.no-figure{min-height:205px;padding-bottom:28px}.hero-content,.hero.no-figure .hero-content{max-width:100%}.hero h1{font-size:32px}.hero p{font-size:11px;max-width:360px}.hero-figure{height:62%;max-width:77%;right:2%;opacity:.92}.section-intro{display:block;margin-top:28px}.section-intro p{text-align:left;margin-top:6px}.form-panel,.result-panel{padding:20px}.note-card{padding:19px}.field-grid{gap:10px}.perk{gap:9px}.perk-state{font-size:9px}footer{align-items:flex-start;flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#atas" aria-label="lemburKU, kembali ke atas">
+        <span class="brand-mark"><i class="fi fi-rr-hourglass-end" aria-hidden="true"></i></span>
+        <span>lembur<span class="brand-accent">KU</span><small>kalkulator lembur</small></span>
+      </a>
+    </header>
+
+    <main id="atas">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-content">
+          <h1 id="hero-title">Hitung lembur, <em>lebih mudah.</em></h1>
+          <p>Lihat upah dan fasilitas lembur dalam satu tempat.</p>
+        </div>
+        <!-- Ganti src ini jika nama file atau URL gambar berubah. -->
+        <img class="hero-figure" src="img/dodi.png" alt="" aria-hidden="true" onerror="this.hidden=true;this.parentElement.classList.add('no-figure')">
+      </section>
+
+      <div class="section-intro">
+        <div><h2>Simulasi perhitungan</h2></div>
+        <p>Isi tanggal dan jam lemburmu.</p>
+      </div>
+
+      <div class="layout">
+        <section class="panel form-panel" aria-labelledby="form-title">
+          <div class="panel-head">
+            <div><h3 id="form-title">Detail lembur</h3></div>
+            <button class="reset-link" type="button" id="resetBtn">Reset</button>
+          </div>
+          <form id="overtimeForm" novalidate>
+            <div class="field-block">
+              <label class="field-label" for="employeeName">Nama pegawai</label>
+              <input class="input" id="employeeName" type="text" maxlength="45" autocomplete="name" placeholder="Masukkan nama">
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="employeeGrade">Grade</label>
+              <select class="input" id="employeeGrade">
+                <option value="pelaksana">Pelaksana</option>
+                <option value="pejabat">Head / Officer / Pejabat</option>
+              </select>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="workDate">Tanggal lembur</label>
+              <input class="input" id="workDate" type="date" required>
+              <div class="day-info" id="dayInfo" aria-live="polite"></div>
+            </div>
+
+            <label class="holiday-toggle" for="nationalHoliday">
+              <span><strong>Libur nasional</strong><small>Aktifkan jika tanggal merah jatuh pada hari kerja.</small></span>
+              <input type="checkbox" id="nationalHoliday">
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+
+            <div class="divider"></div>
+            <div class="field-grid">
+              <div>
+                <label class="field-label" for="startTime">Jam mulai</label>
+                <input class="input" id="startTime" type="time" step="60" required>
+              </div>
+              <div>
+                <label class="field-label" for="endTime">Jam selesai</label>
+                <input class="input" id="endTime" type="time" step="60" required>
+              </div>
+            </div>
+            <p class="helper">Jam selesai 00.00 berarti tengah malam keesokan hari. Istirahat 18.00–19.00 tidak dihitung.</p>
+
+          </form>
+          <div class="example-row" aria-label="Contoh cepat">
+            <span class="example-title">Coba contoh:</span>
+            <button class="example" type="button" data-example="weekday">Kamis · 21.00</button>
+            <button class="example" type="button" data-example="friday">Jumat · 20.00</button>
+            <button class="example" type="button" data-example="holiday">Libur · 19.00</button>
+          </div>
+        </section>
+
+        <section class="panel result-panel" aria-labelledby="result-title" id="resultPanel">
+          <div class="result-head"><h3 id="result-title">Hasil perhitungan</h3></div>
+          <div class="wage-card">
+            <div class="wage-top"><span>ESTIMASI UPAH LEMBUR</span></div>
+            <div class="amount" id="wageAmount">Rp0</div>
+            <div class="status" id="wageStatus">Menunggu perhitungan</div>
+          </div>
+          <p class="result-date" id="resultMeta">Tanggal dan waktu lembur akan muncul di sini.</p>
+          <div class="perk-list">
+            <div class="perk">
+              <div class="perk-icon mint"><i class="fi fi-rr-restaurant" aria-hidden="true"></i></div>
+              <div class="perk-main"><strong>Makan &amp; minum</strong><small id="mealDetail">Maks. senilai Rp50.000 · tidak diuangkan</small></div>
+              <span class="perk-state off" id="mealState">—</span>
+            </div>
+            <div class="perk">
+              <div class="perk-icon"><i class="fi fi-rr-medicine" aria-hidden="true"></i></div>
+              <div class="perk-main"><strong>Suplemen / vitamin</strong><small id="suppDetail">Maks. senilai Rp65.000 · tidak diuangkan</small></div>
+              <span class="perk-state off" id="suppState">—</span>
+            </div>
+          </div>
+          <div class="explain" aria-live="polite">
+            <strong>Catatan perhitungan</strong>
+            <p id="resultExplain">Makan dan vitamin adalah fasilitas, bukan tambahan uang tunai.</p>
+          </div>
+          <button type="button" class="primary" id="downloadPdfBtn"><i class="fi fi-rr-download" aria-hidden="true"></i> Unduh laporan PDF</button>
+          <button type="button" class="copy-btn" id="copyBtn"><i class="fi fi-rr-copy" aria-hidden="true"></i> Salin ringkasan</button>
+        </section>
+      </div>
+
+      <aside class="note-card" aria-label="Catatan perhitungan">
+        <div>
+          <div class="note-label"><h3>Acuan perhitungan</h3></div>
+          <p>Nominal upah mengikuti pola yang telah dicocokkan. Makan dan vitamin mengikuti Pasal 7 SK Direksi No. 183 Tahun 2019.</p>
+        </div>
+        <div class="note-mini"><p>Jam yang belum diuji ditandai sebagai estimasi atau belum teruji.</p></div>
+      </aside>
+    </main>
+
+    <footer><span>© <span id="year"></span> lemburKU · created by yudagrh</span><span>Uicons by <a href="https://www.flaticon.com/uicons" target="_blank" rel="noopener noreferrer">Flaticon</a> · <a href="https://sweetalert2.github.io/" target="_blank" rel="noopener noreferrer">SweetAlert2</a></span></footer>
+  </div>
+
+  <script>
+    'use strict';
+    const $ = id => document.getElementById(id);
+    let latestSummary = '';
+    let latestResult = null;
+
+    function toast(icon,title){
+      if(window.Swal){
+        Swal.fire({toast:true,position:'top-end',icon,title,showConfirmButton:false,timer:3100,timerProgressBar:true,customClass:{popup:'soft-toast'}});
+      }else{
+        const region=$('dayInfo');
+        region.textContent=title;
+      }
+    }
+    function parseMinutes(value){
+      if(!/^\d{2}:\d{2}$/.test(value || '')) return NaN;
+      const [h,m]=value.split(':').map(Number);
+      return h<24 && m<60 ? h*60+m : NaN;
+    }
+    function localDate(value){
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return null;
+      const [y,m,d]=value.split('-').map(Number);
+      const date=new Date(y,m-1,d,12);
+      return date.getFullYear()===y && date.getMonth()===m-1 && date.getDate()===d ? date : null;
+    }
+    function dateValue(date){
+      return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    }
+    function category(date){
+      const day=date.getDay();
+      if(day===0 || day===6 || $('nationalHoliday').checked) return 'holiday';
+      return day===5 ? 'friday' : 'weekday';
+    }
+    function categoryName(kind,date){
+      if(kind==='holiday') return date.getDay()===0 || date.getDay()===6 ? 'Akhir pekan · skema hari libur' : 'Libur nasional · skema hari libur';
+      return kind==='friday' ? 'Jumat · skema hari kerja' : 'Senin–Kamis · skema hari kerja';
+    }
+    function formatRupiah(value){return 'Rp'+new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(value)}
+    function overlap(start,end,breakStart,breakEnd){return Math.max(0,Math.min(end,breakEnd)-Math.max(start,breakStart))}
+    function updateDateUI(resetTimes=false){
+      const date=localDate($('workDate').value);
+      if(!date){$('dayInfo').textContent='Pilih tanggal yang valid.';return}
+      const kind=category(date);
+      $('dayInfo').textContent=categoryName(kind,date);
+      if(resetTimes){
+        $('startTime').value=kind==='holiday'?'07:00':kind==='friday'?'17:00':'16:30';
+        $('endTime').value=kind==='holiday'?'13:00':kind==='friday'?'21:00':'21:00';
+      }
+    }
+
+    // Rentang hari kerja mengikuti pengujian; jam mulai libur lain memakai estimasi pola.
+    function calculateWage(kind,start,end){
+      if(kind==='weekday' && start===990){
+        if(end<=1140) return {amount:0,hours:0,state:end===1140?'verified':'pattern',detail:'Sampai 19.00 belum ada upah.'};
+        if(end<1170) return {amount:null,hours:null,state:'unknown',detail:'Batas 19.01–19.29 belum diuji.'};
+        if(end<=1230) return {amount:35000,hours:2,state:'verified',detail:'19.30–20.30: dua jam upah lembur, Rp35.000.'};
+        return {amount:55000,hours:3,state:'verified',detail:'Mulai 20.31 dan seterusnya: Rp55.000.'};
+      }
+      if(kind==='friday' && start===1020){
+        if(end<=1199) return {amount:0,hours:0,state:'verified',detail:'Jumat sampai 19.59: Rp0.'};
+        if(end<1260) return {amount:35000,hours:2,state:end===1200?'verified':'pattern',detail:'Jumat mulai 20.00 hingga sebelum 21.00: Rp35.000.'};
+        return {amount:55000,hours:3,state:'verified',detail:'Jumat mulai 21.00 dan seterusnya: Rp55.000.'};
+      }
+      if(kind==='holiday'){
+        // Contoh 04.00–08.00 dan 07.00–10.00 sama-sama menghasilkan dua jam.
+        // Sebelum 06.00 tidak diakui; setelah itu satu jam awal tidak masuk hitungan.
+        const paidStart=Math.max(360,start+60);
+        const rest=overlap(paidStart,end,1080,1140);
+        const hours=Math.max(0,Math.floor((end-paidStart-rest)/60));
+        const verified=(start===240 && end===480) || (start===420 && [540,600,660,720,780,960,1020,1080,1140].includes(end));
+        if(hours<2) return {amount:0,hours,state:verified?'verified':'pattern',detail:'Belum mencapai dua jam yang diakui untuk upah.'};
+        const amount=Math.min(hours,8)*20000+(hours>=9?30000:0)+Math.max(0,hours-9)*40000;
+        return {amount,hours,state:verified?'verified':'pattern',detail:`${hours} jam diakui: 8 jam pertama x2, jam ke-9 x3, berikutnya x4. Istirahat 18.00–19.00 tidak dihitung.`};
+      }
+      return {amount:null,hours:null,state:'unknown',detail:'Jam mulai ini belum memiliki hasil uji perhitungan.'};
+    }
+
+    function setState(id,text,mode){
+      const node=$(id);node.textContent=text;node.className=`perk-state ${mode}`;
+    }
+    function showPending(message){
+      latestResult=null;latestSummary='';$('downloadPdfBtn').disabled=true;
+      $('wageAmount').textContent='—';$('wageAmount').classList.add('unknown');
+      $('wageStatus').textContent=message;$('resultMeta').textContent='Lengkapi tanggal dan jam lembur.';
+      setState('mealState','—','off');setState('suppState','—','off');
+      $('resultExplain').textContent='Hasil akan muncul otomatis setelah waktu diisi.';
+    }
+    function calculate(showToast=false){
+      const date=localDate($('workDate').value);
+      const start=parseMinutes($('startTime').value);
+      const rawEnd=parseMinutes($('endTime').value);
+      const end=rawEnd===0?1440:rawEnd; // 00.00 adalah penutup hari lembur, bukan jam mulai yang sama.
+      if(!date || !Number.isFinite(start) || !Number.isFinite(end)){
+        showPending('Data belum lengkap');
+        if(showToast)toast('warning','Lengkapi tanggal dan jam lembur terlebih dahulu.');
+        return false;
+      }
+      if(end<=start){
+        showPending('Periksa jam lembur');
+        if(showToast)toast('warning','Jam selesai harus setelah jam mulai. Gunakan 00.00 untuk tengah malam.');
+        return false;
+      }
+      const kind=category(date);
+      const wage=calculateWage(kind,start,end);
+      const name=$('employeeName').value.trim().replace(/\s+/g,' ');
+      const grade=$('employeeGrade').value==='pejabat'?'pejabat':'pelaksana';
+      const gradeLabel=grade==='pelaksana'?'Pelaksana':'Head / Officer / Pejabat';
+      const mealLimit=grade==='pelaksana'?50000:75000;
+      const gradeCaveat=grade==='pejabat'?'Nominal upah memakai acuan Pelaksana; nilai upah grade ini perlu dicek.':'';
+      const breaks=overlap(start,end,1080,1140);
+      const effective=end-start-breaks;
+      const meal=effective>=120;
+      const supplement=end>1320;
+      const dateText=new Intl.DateTimeFormat('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(date);
+      $('wageAmount').textContent=wage.amount===null?'Belum teruji':formatRupiah(wage.amount);
+      $('wageAmount').classList.toggle('unknown',wage.amount===null);
+      const stateText=wage.amount===null?'Belum teruji':grade==='pejabat'?'Acuan upah Pelaksana · cek grade':wage.state==='verified'?'Sesuai data yang diuji':'Estimasi mengikuti pola';
+      $('wageStatus').textContent=stateText;
+      const endLabel=$('endTime').value+(rawEnd===0?' (esok hari)':'');
+      $('resultMeta').textContent=`${dateText} · ${$('startTime').value}–${endLabel} WIB · ${categoryName(kind,date)}`;
+      const mealNeedsCheck=meal && wage.amount===0 && kind==='holiday';
+      setState('mealState',mealNeedsCheck?'Konfirmasi':meal?'Memenuhi syarat':'Belum',mealNeedsCheck?'check':meal?'':'off');
+      setState('suppState',supplement?'Memenuhi syarat':'Belum',''+(supplement?'':'off'));
+      $('mealDetail').textContent=`${meal?'Kerja efektif '+Math.floor(effective/60)+' jam '+String(effective%60).padStart(2,'0')+' menit · ':'Minimal 2 jam kerja efektif · '}maks. senilai ${formatRupiah(mealLimit)}, bukan uang tunai`;
+      $('suppDetail').textContent=`${supplement?'Selesai lewat 22.00 WIB · ':'Berlaku jika selesai lewat 22.00 WIB · '}maks. senilai Rp65.000, bukan uang tunai`;
+      const extra=mealNeedsCheck?' Fasilitas makan perlu dikonfirmasi karena upah periode ini Rp0.':'';
+      $('resultExplain').textContent=`${wage.detail} Kerja efektif untuk makan: ${Math.floor(effective/60)} jam ${effective%60} menit. Fasilitas tidak diuangkan.${extra}${gradeCaveat?' '+gradeCaveat:''}`;
+      latestResult={date,dateText,kind,startText:$('startTime').value,endLabel,wage,meal,supplement,mealNeedsCheck,effective,breaks,stateText,name,grade,gradeLabel,mealLimit,gradeCaveat};
+      $('downloadPdfBtn').disabled=wage.amount===null;
+      latestSummary=`lemburKU\nNama: ${name||'Belum diisi'}\nGrade: ${gradeLabel}\n${dateText} | ${$('startTime').value}–${endLabel} WIB\nJenis hari: ${categoryName(kind,date)}\nUpah lembur: ${wage.amount===null?'Belum teruji':formatRupiah(wage.amount)} (${stateText})\nMakan/minum: ${mealNeedsCheck?'perlu konfirmasi':meal?'memenuhi syarat, maks. senilai '+formatRupiah(mealLimit):'belum memenuhi syarat'}\nSuplemen/vitamin: ${supplement?'memenuhi syarat, maks. senilai Rp65.000':'belum memenuhi syarat'}\nFasilitas bukan tambahan uang tunai.\nCatatan: ${wage.detail}${gradeCaveat?' '+gradeCaveat:''}`;
+      if(showToast)toast(wage.amount===null?'info':'success',wage.amount===null?'Jam ini belum teruji.':'Hasil diperbarui.');
+      return true;
+    }
+
+    function nextDayOfWeek(target){
+      const now=new Date();now.setHours(12,0,0,0);
+      const diff=(target-now.getDay()+7)%7;
+      now.setDate(now.getDate()+diff);
+      return now;
+    }
+    function downloadPdf(){
+      if(!latestResult || latestResult.wage.amount===null){toast('info','Lengkapi waktu dengan hasil upah yang tersedia.');return}
+      if(!latestResult.name){toast('warning','Isi nama pegawai untuk laporan PDF.');$('employeeName').focus();return}
+      if(!window.jspdf?.jsPDF){toast('error','Modul PDF belum termuat. Periksa koneksi internet.');return}
+      try{
+        const r=latestResult;
+        const doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+        const plain=value=>String(value).replace(/[–—]/g,'-').replace(/·/g,'-').replace(/×/g,'x');
+        const text=(value,x,y,size=10,color=[50,41,70],bold=false)=>{
+          doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(size);doc.setTextColor(...color);doc.text(plain(value),x,y);
+        };
+        const violet=[119,86,177],ink=[50,41,70],muted=[113,103,130];
+        doc.setProperties({title:'Laporan Simulasi Lembur - lemburKU',subject:'Rincian upah dan fasilitas lembur',author:'lemburKU'});
+        doc.setFillColor(247,243,253);doc.rect(0,0,210,51,'F');
+        doc.setFillColor(...violet);doc.roundedRect(20,10,43,11,4,4,'F');
+        text('lemburKU',25,17.5,12,[255,255,255],true);
+        text('Laporan Simulasi Lembur',20,32,19,ink,true);
+        text('Rincian satu hari kerja lembur',20,41,9,muted);
+
+        doc.setFillColor(...violet);doc.roundedRect(20,55,170,37,6,6,'F');
+        text(r.grade==='pejabat'?'ACUAN UPAH PELAKSANA':'ESTIMASI UPAH LEMBUR',27,65,9,[237,226,255],true);
+        text(formatRupiah(r.wage.amount),27,79,23,[255,255,255],true);
+        text(r.stateText,27,87,8,[239,229,255]);
+
+        text('Rincian lembur',20,103,11,ink,true);
+        doc.setFillColor(236,228,249);doc.roundedRect(20,108,170,8,2,2,'F');
+        text('KETERANGAN',24,113.5,8,violet,true);text('HASIL',81,113.5,8,violet,true);
+        const rows=[
+          ['Nama pegawai',r.name],
+          ['Grade',r.gradeLabel],
+          ['Tanggal',r.dateText],
+          ['Jenis hari',categoryName(r.kind,r.date)],
+          ['Jam mulai',r.startText+' WIB'],
+          ['Jam selesai',r.endLabel+' WIB'],
+          ['Kerja efektif',`${Math.floor(r.effective/60)} jam ${r.effective%60} menit`],
+          ['Jam upah diakui',r.wage.hours===null?'Belum teruji':`${r.wage.hours} jam`]
+        ];
+        rows.forEach(([label,value],i)=>{
+          const y=116+i*9.1;
+          if(i%2===0){doc.setFillColor(251,249,254);doc.rect(20,y,170,9.1,'F')}
+          text(label,24,y+6,8.3,muted);text(value,81,y+6,8.6,ink,i===0||i===1);
+        });
+
+        text('Fasilitas lembur',20,197,11,ink,true);
+        doc.setFillColor(236,228,249);doc.roundedRect(20,202,170,8,2,2,'F');
+        text('KOMPONEN',24,207.5,8,violet,true);text('STATUS',94,207.5,8,violet,true);text('BATAS NILAI',147,207.5,8,violet,true);
+        const benefits=[
+          ['Makan & minum',r.mealNeedsCheck?'Konfirmasi':r.meal?'Memenuhi':'Belum',formatRupiah(r.mealLimit)],
+          ['Suplemen / vitamin',r.supplement?'Memenuhi':'Belum','Rp65.000']
+        ];
+        benefits.forEach(([label,status,limit],i)=>{
+          const y=210+i*11.5;
+          if(i%2===0){doc.setFillColor(251,249,254);doc.rect(20,y,170,11.5,'F')}
+          text(label,24,y+7.3,8.7,ink,true);text(status,94,y+7.3,8.5,r.mealNeedsCheck&&i===0?[153,99,103]:ink);text('Maks. '+limit,147,y+7.3,8.4,ink);
+        });
+
+        doc.setFillColor(247,243,253);doc.roundedRect(20,240,170,34,4,4,'F');
+        text('Catatan',25,249,9,violet,true);
+        const note=plain(r.wage.detail+' Makan dan vitamin bukan tambahan uang tunai.'+(r.mealNeedsCheck?' Fasilitas makan perlu konfirmasi.':'')+(r.gradeCaveat?' '+r.gradeCaveat:''));
+        doc.setFont('helvetica','normal');doc.setFontSize(7.7);doc.setTextColor(...muted);
+        doc.text(doc.splitTextToSize(note,158),25,255,{lineHeightFactor:1.2});
+        doc.setDrawColor(225,216,239);doc.line(20,283,190,283);
+        text('lemburKU  |  created by yudagrh',20,289,8,muted);
+        doc.setFont('helvetica','normal');doc.setFontSize(7.4);doc.setTextColor(...muted);
+        doc.text('SK Direksi No. 183 Tahun 2019, Pasal 7',190,289,{align:'right'});
+        const pageCount=doc.internal.getNumberOfPages();
+        if(pageCount>1)throw new Error('Laporan melebihi satu halaman');
+        doc.save(`laporan-lemburKU-${dateValue(r.date)}.pdf`);
+        toast('success','Laporan PDF berhasil diunduh.');
+      }catch(error){console.error(error);toast('error','Laporan PDF belum bisa dibuat.');}
+    }
+    $('overtimeForm').addEventListener('submit',event=>event.preventDefault());
+    $('workDate').addEventListener('change',()=>{updateDateUI(true);calculate(false)});
+    $('nationalHoliday').addEventListener('change',()=>{updateDateUI(true);calculate(false)});
+    ['employeeName','startTime','endTime'].forEach(id=>$(id).addEventListener('input',()=>calculate(false)));
+    $('employeeGrade').addEventListener('change',()=>calculate(false));
+    $('resetBtn').addEventListener('click',()=>{
+      $('employeeName').value='';$('employeeGrade').value='pelaksana';$('workDate').value=dateValue(new Date());$('nationalHoliday').checked=false;updateDateUI(true);calculate(false);toast('success','Form kembali ke contoh awal.');
+    });
+    document.querySelectorAll('[data-example]').forEach(button=>button.addEventListener('click',()=>{
+      const type=button.dataset.example;
+      $('workDate').value=dateValue(nextDayOfWeek(type==='weekday'?4:type==='friday'?5:6));
+      $('nationalHoliday').checked=false;
+      updateDateUI(true);
+      $('endTime').value=type==='friday'?'20:00':type==='holiday'?'19:00':'21:00';
+      calculate(false);toast('success','Contoh berhasil dimuat.');
+    }));
+    $('copyBtn').addEventListener('click',async()=>{
+      if(!latestSummary){toast('info','Isi waktu lembur dahulu sebelum menyalin.');return}
+      try{
+        if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(latestSummary)}
+        else{
+          const field=document.createElement('textarea');field.value=latestSummary;field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();
+          const copied=document.execCommand('copy');field.remove();if(!copied)throw new Error('copy failed');
+        }
+        toast('success','Ringkasan berhasil disalin.');
+      }catch{toast('warning','Tidak bisa menyalin otomatis di perangkat ini.');}
+    });
+    $('downloadPdfBtn').addEventListener('click',downloadPdf);
+    $('year').textContent=new Date().getFullYear();
+    $('workDate').value=dateValue(new Date());
+    updateDateUI(true);
+    calculate(false);
+  </script>
+</body>
+</html>
