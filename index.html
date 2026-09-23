@@ -119,6 +119,7 @@
     .explain p{margin:7px 0 0;color:var(--soft-ink);font-size:11px;line-height:1.8}
     .copy-btn{width:100%;border:1px solid #ddcff0;background:#fff;color:var(--violet-dark);border-radius:12px;padding:11px;font-size:12px;font-weight:700;margin-top:13px;display:flex;align-items:center;justify-content:center;gap:8px}
     .copy-btn:hover{background:#f8f3ff}
+    .copy-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;background:#fff}
     .note-card{display:flex;align-items:center;justify-content:space-between;gap:22px;border:1px solid #e9e2f3;background:#fff;border-radius:22px;padding:21px 25px;margin-top:22px;box-shadow:var(--shadow)}
     .note-card h3{margin:0 0 6px;font-size:15px;letter-spacing:-.025em}
     .note-card p{margin:0;color:var(--soft-ink);font-size:11px;line-height:1.8}
@@ -131,6 +132,18 @@
     footer a{color:var(--violet);text-decoration:none}
     .swal2-container{font-family:Poppins,Arial,sans-serif!important}
     .swal2-popup.swal2-toast{border-radius:14px!important;box-shadow:0 12px 35px #45306626!important}
+    .intro-loader{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 48% 44%,#eadff7 0%,#f5effc 38%,#fcfaff 78%);transition:opacity .45s ease,transform .6s cubic-bezier(.2,.75,.25,1)}
+    .intro-loader[hidden]{display:none}
+    .intro-loader::before{content:"";position:absolute;width:min(65vw,420px);aspect-ratio:1;border-radius:50%;border:1px solid #b89ad522;box-shadow:0 0 0 36px #b89ad508,0 0 0 72px #b89ad505}
+    .loader-word{position:relative;display:inline-block;color:var(--violet);font-size:clamp(42px,8vw,68px);font-weight:700;letter-spacing:-.06em;line-height:1.25;filter:drop-shadow(0 10px 18px #7954a31c)}
+    .loader-space{visibility:hidden}
+    .loader-typed{position:absolute;left:0;top:0;white-space:nowrap}
+    .loader-cursor{display:inline-block;width:3px;height:.82em;border-radius:3px;background:#9873c2;margin-left:7px;vertical-align:-.02em;animation:cursorBlink .8s steps(1,end) infinite}
+    .intro-loader.is-leaving{opacity:0;transform:scale(1.025);pointer-events:none}
+    body.is-loading{overflow:hidden}
+    body.is-loading .shell{visibility:hidden}
+    body.is-loading :is(.topbar,.hero,.section-intro,.form-panel,.result-panel,.note-card,footer,.shape){animation-play-state:paused}
+    @keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
     .topbar{animation:enterTop .7s cubic-bezier(.2,.75,.25,1) both}
     .hero{animation:enterTop .9s .08s cubic-bezier(.2,.75,.25,1) both}
     .section-intro{animation:enterTop .8s .16s cubic-bezier(.2,.75,.25,1) both}
@@ -148,6 +161,41 @@
   </style>
 </head>
 <body>
+  <div class="intro-loader" id="introLoader" role="status" aria-label="Memuat lemburKU" hidden>
+    <div class="loader-word" aria-hidden="true">
+      <span class="loader-space">lemburKU</span>
+      <span class="loader-typed"><span id="loaderText"></span><span class="loader-cursor"></span></span>
+    </div>
+  </div>
+  <script>
+    (()=>{
+      const loader=document.getElementById('introLoader');
+      const output=document.getElementById('loaderText');
+      const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const word='lemburKU';
+      let index=0,finished=false;
+      const finish=()=>{
+        if(finished)return;
+        finished=true;
+        document.body.classList.remove('is-loading');
+        loader.classList.add('is-leaving');
+        loader.setAttribute('aria-hidden','true');
+        setTimeout(()=>loader.remove(),reduced?0:600);
+      };
+      const type=()=>{
+        if(finished)return;
+        output.textContent=word.slice(0,++index);
+        if(index<word.length)setTimeout(type,index===6?190:120);
+        else setTimeout(finish,420);
+      };
+      document.body.classList.add('is-loading');
+      loader.hidden=false;
+      if(reduced){output.textContent=word;setTimeout(finish,100)}
+      else setTimeout(type,220);
+      setTimeout(finish,5000);
+      window.addEventListener('pageshow',event=>{if(event.persisted)finish()});
+    })();
+  </script>
   <div class="ambient-shapes" aria-hidden="true">
     <span class="shape shape-orb"></span>
     <span class="shape shape-ring"></span>
@@ -240,25 +288,25 @@
           <div class="result-head"><h3 id="result-title">Hasil perhitungan</h3></div>
           <div class="wage-card">
             <div class="wage-top"><span>SIMULASI UPAH LEMBUR</span></div>
-            <div class="amount" id="wageAmount">Rp0</div>
-            <div class="status" id="wageStatus">Menunggu perhitungan</div>
+            <div class="amount unknown" id="wageAmount">—</div>
+            <div class="status" id="wageStatus">Belum ada perhitungan</div>
           </div>
           <p class="result-date" id="resultMeta">Tanggal dan waktu lembur akan muncul di sini.</p>
-          <p class="duration-summary" id="durationSummary" aria-live="polite">Durasi total − istirahat = durasi efektif.</p>
+          <p class="duration-summary" id="durationSummary" aria-live="polite">Durasi akan muncul setelah waktu diisi.</p>
           <div class="perk-list">
             <div class="perk">
               <div class="perk-icon mint"><i class="fi fi-rr-restaurant" aria-hidden="true"></i></div>
-              <div class="perk-main"><strong>Makan &amp; minum</strong><small id="mealDetail">Maks. senilai Rp50.000 · tidak diuangkan</small></div>
+              <div class="perk-main"><strong>Makan &amp; minum</strong><small id="mealDetail">Isi waktu lembur untuk melihat fasilitas.</small></div>
               <span class="perk-state off" id="mealState">—</span>
             </div>
             <div class="perk">
               <div class="perk-icon"><i class="fi fi-rr-medicine" aria-hidden="true"></i></div>
-              <div class="perk-main"><strong>Suplemen / vitamin</strong><small id="suppDetail">Maks. senilai Rp65.000 · tidak diuangkan</small></div>
+              <div class="perk-main"><strong>Suplemen / vitamin</strong><small id="suppDetail">Isi waktu lembur untuk melihat fasilitas.</small></div>
               <span class="perk-state off" id="suppState">—</span>
             </div>
             <div class="perk">
               <div class="perk-icon"><i class="fi fi-rr-bowl-rice" aria-hidden="true"></i></div>
-              <div class="perk-main"><strong>Tambahan makan</strong><small id="extraMealDetail">Untuk lembur di atas pukul 00.00 · tidak diuangkan</small></div>
+              <div class="perk-main"><strong>Tambahan makan</strong><small id="extraMealDetail">Isi waktu lembur untuk melihat fasilitas.</small></div>
               <span class="perk-state off" id="extraMealState">—</span>
             </div>
           </div>
@@ -266,8 +314,8 @@
             <strong>Catatan perhitungan</strong>
             <p id="resultExplain">Makan dan vitamin adalah fasilitas, bukan tambahan uang tunai.</p>
           </div>
-          <button type="button" class="primary" id="downloadPdfBtn"><i class="fi fi-rr-download" aria-hidden="true"></i> Unduh laporan PDF</button>
-          <button type="button" class="copy-btn" id="copyBtn"><i class="fi fi-rr-copy" aria-hidden="true"></i> Salin ringkasan</button>
+          <button type="button" class="primary" id="downloadPdfBtn" disabled><i class="fi fi-rr-download" aria-hidden="true"></i> Unduh laporan PDF</button>
+          <button type="button" class="copy-btn" id="copyBtn" disabled><i class="fi fi-rr-copy" aria-hidden="true"></i> Salin ringkasan</button>
         </section>
       </div>
 
@@ -422,12 +470,20 @@
       const node=$(id);node.textContent=text;node.className=`perk-state ${mode}`;
     }
     function showPending(message){
-      latestResult=null;latestSummary='';$('downloadPdfBtn').disabled=true;
+      latestResult=null;latestSummary='';$('downloadPdfBtn').disabled=true;$('copyBtn').disabled=true;
       $('wageAmount').textContent='—';$('wageAmount').classList.add('unknown');
       $('wageStatus').textContent=message;$('resultMeta').textContent='Lengkapi tanggal dan jam lembur.';
-      $('durationSummary').textContent='Durasi total − istirahat = durasi efektif.';
+      $('durationSummary').textContent='Durasi akan muncul setelah waktu diisi.';
       setState('mealState','—','off');setState('suppState','—','off');setState('extraMealState','—','off');
+      for(const id of ['mealDetail','suppDetail','extraMealDetail'])$(id).textContent='Isi waktu lembur untuk melihat fasilitas.';
       $('resultExplain').textContent='Hasil akan muncul otomatis setelah waktu diisi.';
+    }
+    function clearForm(){
+      for(const id of ['employeeName','workDate','startTime','endTime'])$(id).value='';
+      $('employeeGrade').value='pelaksana';
+      $('nationalHoliday').checked=false;$('urgentWork').checked=false;
+      $('dayInfo').textContent='Pilih tanggal lembur.';
+      showPending('Belum ada perhitungan');
     }
     function calculate(showToast=false){
       const date=localDate($('workDate').value);
@@ -489,7 +545,7 @@
       $('resultExplain').textContent=[wage.detail,breakText,...wage.review,urgentNote].filter(Boolean).join(' ');
 
       latestResult={date,dateText,kind,startText:$('startTime').value,endLabel,wage,meal,supplement,extraMeal,effective,elapsed,breaks,stateText,name,grade,gradeLabel:profile.label,mealLimit:profile.mealLimit,afterMidnight,urgentAfterMidnight,notes};
-      $('downloadPdfBtn').disabled=false;
+      $('downloadPdfBtn').disabled=false;$('copyBtn').disabled=false;
       latestSummary=`lemburKU - Simulasi berdasarkan SK Direksi No. 183 Tahun 2019\nNama: ${name||'Belum diisi'}\nGrade: ${profile.label}\nTanggal: ${dateText}\nWaktu: ${$('startTime').value}-${endLabel} WIB\nJenis hari: ${categoryName(kind,date)}\nDurasi total: ${durationText(elapsed)}\nDikurangi istirahat: ${durationText(breaks.minutes)}\nDurasi efektif: ${durationText(effective)}\nWaktu diperhitungkan: ${durationText(wage.creditedMinutes)}\nSimulasi upah: ${formatRupiah(wage.amount)} (${stateText})\nMakan/minum: ${meal===null?'konfirmasi SDM':meal?'syarat waktu cukup, maks. '+formatRupiah(profile.mealLimit):'belum memenuhi syarat waktu'}\nSuplemen/vitamin: ${supplement===null?'konfirmasi SDM':supplement?'syarat waktu cukup, maks. Rp65.000':'belum memenuhi syarat waktu'}\nTambahan makan: ${extraMeal===null?'konfirmasi SDM':extraMeal?'syarat waktu cukup, Rp50.000':'belum memenuhi syarat waktu'}\nCatatan:\n${notes.join('\n')}`;
       if(showToast)toast('success','Hasil berdasarkan SK berhasil diperbarui.');
       return true;
@@ -594,13 +650,13 @@
     }
 
     $('overtimeForm').addEventListener('submit',event=>event.preventDefault());
-    $('workDate').addEventListener('change',()=>{updateDateUI(true);calculate(false)});
-    $('nationalHoliday').addEventListener('change',()=>{updateDateUI(true);calculate(false)});
+    $('workDate').addEventListener('change',()=>{updateDateUI(false);calculate(false)});
+    $('nationalHoliday').addEventListener('change',()=>{updateDateUI(false);calculate(false)});
     $('urgentWork').addEventListener('change',()=>calculate(false));
     ['employeeName','startTime','endTime'].forEach(id=>$(id).addEventListener('input',()=>calculate(false)));
     $('employeeGrade').addEventListener('change',()=>calculate(false));
     $('resetBtn').addEventListener('click',()=>{
-      $('employeeName').value='';$('employeeGrade').value='pelaksana';$('workDate').value=dateValue(new Date());$('nationalHoliday').checked=false;$('urgentWork').checked=false;updateDateUI(true);calculate(false);toast('success','Form kembali ke contoh awal.');
+      clearForm();toast('success','Form dan hasil perhitungan dikosongkan.');
     });
     document.querySelectorAll('[data-example]').forEach(button=>button.addEventListener('click',()=>{
       const type=button.dataset.example;
@@ -641,9 +697,7 @@
       }
     });
     $('year').textContent=new Date().getFullYear();
-    $('workDate').value=dateValue(new Date());
-    updateDateUI(true);
-    calculate(false);
+    clearForm();
   </script>
 </body>
 </html>
