@@ -533,14 +533,12 @@
       }
 
       const breakText=breaks.minutes?`Jeda ${breaks.labels.join(' dan ')} mengurangi ${durationText(breaks.minutes)}.`:'Tidak ada jeda SK yang terlewati.';
-      const weeklyNote=kind==='workday'?' Batas 14 jam Senin-Jumat per minggu perlu diperiksa dari rekap mingguan.':'';
+      const weeklyNote=kind==='workday'?'Dapat berubah mengikuti ketentuan yang ada':'';
       const urgentNote=afterMidnight&&!$('urgentWork').checked?' Pekerjaan lewat 00.00 belum ditandai urgent, sehingga ketentuan khusus Pasal 7 ayat (5) tidak diterapkan.':'';
       const durationNote=`Durasi total ${durationText(elapsed)} dikurangi istirahat ${durationText(breaks.minutes)} = durasi efektif ${durationText(effective)}.`;
       const notes=[durationNote,breakText,wage.detail,...wage.review,weeklyNote.trim(),urgentNote.trim(),
         grade==='direksi'?'Fasilitas Direksi tidak ditetapkan pada Pasal 7; konfirmasi ke SDM.':'',
-        'Jeda mengikuti contoh lampiran, bukan jadwal kerja normal. Pastikan input hanya memuat waktu tugas lembur.',
-        'Pembayaran memerlukan surat perintah, rekap hasil, dan persetujuan sesuai Pasal 4 dan 8. Bukan untuk petugas yang hanya mengoordinasikan konsumsi (Pasal 8 ayat 4).',
-        'Fasilitas makan dan vitamin tidak dapat diuangkan. Vitamin maksimal Rp65.000 per orang/hari, tidak ditambah lagi saat lewat 00.00.'
+        'Ajukan sesuai ketentuan berlaku',
       ].filter(Boolean);
       $('resultExplain').textContent=[wage.detail,breakText,...wage.review,urgentNote].filter(Boolean).join(' ');
 
